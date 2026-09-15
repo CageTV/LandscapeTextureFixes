@@ -67,6 +67,32 @@ public static class TrustResolver
         // something SeamFixer itself re-derives from).
     };
 
+    // The 5 tools in this family's own DEFAULT output plugin names - a
+    // dedicated, narrower set than BaseGamePlugins above (which mixes these
+    // in with ordinary trusted mods like Landscape and Water Fixes/URF).
+    // Needed separately because a caller sometimes wants to exclude ONLY
+    // sibling-tool output from a candidate pool while still allowing real
+    // trusted mods through - using IsTrustedBaseOrPatch/BaseGamePlugins for
+    // that would wrongly also exclude legitimate mods like URF or LWF.
+    //
+    // FIXED 2026-09-15 (real user report, confirmed via a per-vertex height
+    // diagnostic on cell 0096B3 in the Reach): RoadTerrainMerger.cs's own
+    // "Other" (non-road baseline) resolution had NO sibling-tool exclusion
+    // at all beyond its own output name - so a STALE prior run of
+    // LandscapeTextureFixes.esp (itself downstream of RoadMaskMerge, forwarding
+    // whatever height won at ITS OWN build time) could get picked up as
+    // RoadMaskMerge's "Other" baseline on a re-run, instead of the real
+    // underlying mod data. Confirmed via vertex-level proof: RoadMaskMerge's
+    // written height at one vertex matched neither the user's hand patch nor
+    // any of the genuine landscape mods - only a WRONG NR-family patch used
+    // as the road source (see the OTHER fix in this same commit) combined
+    // with this stale-sibling "Other" baseline.
+    public static readonly HashSet<string> SiblingToolOutputs = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "LandscapeSeamFixes.esp", "RoadMaskMerge.esp", "LandscapeTextureFixes.esp",
+        "FloatingObjectFixes.esp", "PatchForeman.esp",
+    };
+
     // Every entry above is trusted alongside its own compatibility-patch
     // family too, not just standalone - most Nexus mods name patches
     // "<Mod Name> - <what it patches>.esp" (LWF's LFfGM/GotT/Myrwatch/...
