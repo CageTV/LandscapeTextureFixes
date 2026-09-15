@@ -799,12 +799,52 @@ public static class TextureLayerFixer
             var aWinsSignal = aIsNorthernRoads || IsTrustedTexture(dominantA, linkCache);
             var bWinsSignal = bIsNorthernRoads || IsTrustedTexture(dominantB, linkCache);
 
+            // FIXED 2026-09-15 (real user report): BOTH sides having a wins
+            // signal used to fall all the way through to "ambiguous - not
+            // our scope" and do nothing at all - the exact real case a user
+            // reported: two different Northern Roads patches (or Northern
+            // Roads vs one of its own patches) painting DIFFERENT specific
+            // road textures (e.g. COTN_LDirtDry01 vs COTN_LDirtDry02) right
+            // up against each other. Neither texture is "wrong" and neither
+            // side should just overwrite the other the way the single-
+            // winner path below does - this is a genuine two-way BLEND
+            // case, not a wins-vs-passive one. Handled separately, before
+            // the single-winner logic, so that logic's own "not our scope"
+            // fallback only ever means "neither side had any signal at all"
+            // (its original, narrower meaning).
+            if (aWinsSignal && bWinsSignal)
+            {
+                var sharedBoth = opacityA.Keys.Where(opacityB.ContainsKey).ToList();
+                var bridgeBoth = sharedBoth.Count > 0
+                    ? sharedBoth.OrderByDescending(t => opacityA[t] + opacityB[t]).First()
+                    : (FormKey?)null;
+
+                if (bridgeBoth is FormKey bridgeBothTexture)
+                {
+                    var severityA = Math.Abs(opacityA.GetValueOrDefault(dominantA) - opacityA.GetValueOrDefault(bridgeBothTexture));
+                    var severityB = Math.Abs(opacityB.GetValueOrDefault(dominantB) - opacityB.GetValueOrDefault(bridgeBothTexture));
+                    AddCorrection(corrections, ws, ax, ay, quadA, bridgeBothTexture, severityA, FixKind.Bridge);
+                    AddCorrection(corrections, ws, bx, by, quadB, bridgeBothTexture, severityB, FixKind.Bridge);
+                }
+                else
+                {
+                    // Nothing shared at all - introduce a hint of EACH
+                    // side's own dominant texture into the OTHER side, so
+                    // the transition softens from both directions instead
+                    // of only one.
+                    var severityBothForeign = Math.Abs(opacityA.GetValueOrDefault(dominantA) - opacityB.GetValueOrDefault(dominantB));
+                    AddCorrection(corrections, ws, bx, by, quadB, dominantA, severityBothForeign, FixKind.Foreign);
+                    AddCorrection(corrections, ws, ax, ay, quadA, dominantB, severityBothForeign, FixKind.Foreign);
+                }
+                continue;
+            }
+
             bool? aIsSource =
                 aWinsSignal && !bWinsSignal ? true
                 : bWinsSignal && !aWinsSignal ? false
-                // Neither side has a "wins" signal (or both do, ambiguous -
-                // not our scope) - fall back to the original, UNCHANGED
-                // generic-trust-as-passive-default behavior.
+                // Neither side has any wins signal at all - fall back to
+                // the original, UNCHANGED generic-trust-as-passive-default
+                // behavior.
                 : genericTrustDecides ? !aGenericTrusted
                 : null; // no signal at all for this edge - not our scope
             if (aIsSource is not bool aSource) continue;

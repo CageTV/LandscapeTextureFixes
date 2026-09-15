@@ -1,5 +1,22 @@
 # Landscape Texture Fixer — Changelog
 
+## v1.1.0 — 2026-09-15
+
+**New: genuine two-way blending when two DIFFERENT trusted road textures meet.** Reported by a user:
+when two different Northern Roads patches (or Northern Roads and one of its own patches) paint
+different specific road textures right up against each other - e.g. one area uses `COTN_LDirtDry01`,
+another uses `COTN_LDirtDry02` - the boundary between them used to get NO correction at all. Both
+sides had a legitimate "this is the deliberate edit" signal, and the tool's cross-cell logic could only
+ever pick ONE winner - when both sides equally qualified, it fell back to "ambiguous, not our scope"
+and silently did nothing, leaving the straight line unfixed.
+
+Fixed: this specific case is now recognized as a genuine BLEND, not a winner-vs-loser situation - both
+sides get a hint of the other's texture (or a shared bridge texture, when the two areas already have
+something painted in common), softening the transition from both directions instead of leaving a hard
+cutoff. Verified against the real live profile: cells patched went from 627 to 1096 - a real, bounded
+increase (not the false-positive flood an earlier, broader "any two different textures" attempt caused
+and had to be reverted for).
+
 ## v1.0.9 — 2026-09-15
 
 **New: automatic ESL flagging.** The generated fix plugin is now checked for ESL eligibility every run
