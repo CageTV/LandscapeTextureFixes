@@ -1,0 +1,19 @@
+bin/
+obj/
+publish/
+publish_multifile/
+*.esp
+*.csv
+smoke_out/
+*.log
+log.txt
+settings-used.json
+For Distribution/
+*.zip
+*.7z
+*.jpg
+*.jpeg
+*.png
+Thumbs.db
+Skyrim Landscape and Water Fixes/
+NOTES.md
