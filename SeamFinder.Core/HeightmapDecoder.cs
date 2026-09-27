@@ -57,7 +57,7 @@ public static class HeightmapDecoder
                 if (x == 0)
                 {
                     heights[0, y] = y == 0
-                        ? vhgt.Offset + delta * 8f
+                        ? (vhgt.Offset + delta) * 8f
                         : heights[0, y - 1] + delta * 8f;
                 }
                 else

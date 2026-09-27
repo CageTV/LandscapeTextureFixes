@@ -1,5 +1,13 @@
 # Landscape Texture Fixer — Changelog
 
+## v1.1.1 — 2026-09-27
+
+- **Fixed: VHGT `Offset` scaling** (reported on the sibling Landscape Seam Fixer:
+  [#2](https://github.com/CageTV/landscape-seam-fixer/issues/2)). The heightmap offset uses the same
+  8-unit step as the per-vertex deltas; reading it unscaled gave wrong absolute terrain heights.
+- The app now uses the tool family's shared icon.
+- Command-line and UI versions aligned at 1.1.1.
+
 ## v1.1.0 — 2026-09-15
 
 **New: genuine two-way blending when two DIFFERENT trusted road textures meet.** Reported by a user:
