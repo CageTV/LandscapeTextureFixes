@@ -1,5 +1,21 @@
 # Landscape Texture Fixer — Changelog
 
+## v1.1.2 — 2026-09-28
+
+- **Fixed: pointing the Game Data path at the game's install folder broke the run.** Using
+  `...\Skyrim Special Edition` instead of `...\Skyrim Special Edition\Data` made every base-game, DLC and
+  Creation Club plugin count as missing. The install folder is now accepted: the tool uses its `Data`
+  subfolder and says so in the log.
+- **New: the run stops up front when the load order can't be built.** If Skyrim.esm still can't be found,
+  or an active plugin needs a master that isn't in any enabled mod, MO2's overwrite folder or the Data
+  folder, the tool stops immediately with a message naming what's missing and how to fix it, instead of
+  failing later with a bare "Could not find file" error.
+- **Fixed: plugins in MO2's `overwrite` folder weren't found.** Generated plugins that live there
+  (Synthesis.esp, a Bashed Patch, other tool output) counted as missing. `overwrite` is now checked first,
+  since it outranks every mod folder.
+- **Crash logs no longer contain the build machine's folder path** (which included its Windows user
+  name). Stack traces still show file and line numbers.
+
 ## v1.1.1 — 2026-09-27
 
 - **Fixed: VHGT `Offset` scaling** (reported on the sibling Landscape Seam Fixer:
