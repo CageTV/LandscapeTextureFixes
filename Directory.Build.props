@@ -1,0 +1,9 @@
+<Project>
+  <!-- Normalizes source paths baked into the .pdb (and so into crash stack
+       traces) to "/_/..." instead of the absolute path of whatever machine
+       built the release - that path included the builder's Windows user
+       name. SourceLink still maps them to the exact GitHub commit. -->
+  <PropertyGroup>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+</Project>
