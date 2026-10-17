@@ -111,6 +111,8 @@ void RunFixMode(string[] fixArgs)
         Console.WriteLine();
         Console.WriteLine($"Patched {fixResult.CellsPatched} cells ({fixResult.LayersAdded} layers added, {fixResult.LayersBoosted} boosted, {fixResult.SkippedQuadrantFull} skipped - quadrant at the 7-layer cap).");
         Console.WriteLine($"Output: {fixResult.OutputPath}");
+        if (fixResult.AllOutputPaths is { Count: > 1 })
+            Console.WriteLine("Split (master limit): enable ALL of: " + string.Join(", ", fixResult.AllOutputPaths.Select(System.IO.Path.GetFileName)));
     }
     catch (Exception ex)
     {

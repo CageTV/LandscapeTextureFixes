@@ -1,20 +1,10 @@
 # Landscape Texture Fixer — Changelog
 
-## v1.1.2 — 2026-09-28
+## v1.1.3 — 2026-10-17
 
-- **Fixed: pointing the Game Data path at the game's install folder broke the run.** Using
-  `...\Skyrim Special Edition` instead of `...\Skyrim Special Edition\Data` made every base-game, DLC and
-  Creation Club plugin count as missing. The install folder is now accepted: the tool uses its `Data`
-  subfolder and says so in the log.
-- **New: the run stops up front when the load order can't be built.** If Skyrim.esm still can't be found,
-  or an active plugin needs a master that isn't in any enabled mod, MO2's overwrite folder or the Data
-  folder, the tool stops immediately with a message naming what's missing and how to fix it, instead of
-  failing later with a bare "Could not find file" error.
-- **Fixed: plugins in MO2's `overwrite` folder weren't found.** Generated plugins that live there
-  (Synthesis.esp, a Bashed Patch, other tool output) counted as missing. `overwrite` is now checked first,
-  since it outranks every mod folder.
-- **Crash logs no longer contain the build machine's folder path** (which included its Windows user
-  name). Stack traces still show file and line numbers.
+- **New: the window is laid out in two columns** with a thin divider you can drag: setup (mod manager, folders) on the left, options, log and results on the right, and the run buttons in a bar along the bottom that is always on screen. The old single-column window was taller than a 1920x1080 screen at 125-150% scaling, so the log and buttons ended up off the bottom. The window now also opens no taller than the usable screen. New dark theme, long tooltips wrap instead of running off the screen.
+- **Fixed: crash when launched from Mod Organizer 2.** .NET 9+ marks programs as compatible with the CPU's shadow-stack protection (CET) by default, and MO2's virtual filesystem hooks trip it, so the app could die on launch from MO2's executables list before showing a window. Both executables are now built with `CETCompat` off, the same as PatchForeman and Synthesis.
+- **New: the output splits automatically when it needs more than 255 masters.** A plugin can only list 255 masters. Instead of failing at the write, the output is split into adjacent plugins (`{name}.esp`, `{name}_2.esp`, ...) the same way Synthesis's "Split Files if Max Masters Exceeded" works, and the window and log list every file. Nothing changes when the output fits in one plugin. **Enable all the files and keep them next to each other in the load order.** The next run does not mistake its own earlier split files for other mods' data, and a `_2` file left over from an earlier split is moved aside as `.bak_<timestamp>` when it is no longer needed.
 
 ## v1.1.1 — 2026-09-27
 

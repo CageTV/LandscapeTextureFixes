@@ -93,6 +93,11 @@ public static class TrustResolver
         "FloatingObjectFixes.esp", "PatchForeman.esp",
     };
 
+    // A sibling tool's output, including the extra plugins it writes when it splits (RoadMaskMerge_2.esp, ...).
+    public static bool IsSiblingToolOutput(string plugin) =>
+        SiblingToolOutputs.Contains(plugin) || SiblingToolOutputs.Any(b => PluginSplitWriter.IsSplitSiblingOf(plugin, b));
+
+
     // Every entry above is trusted alongside its own compatibility-patch
     // family too, not just standalone - most Nexus mods name patches
     // "<Mod Name> - <what it patches>.esp" (LWF's LFfGM/GotT/Myrwatch/...
@@ -173,7 +178,8 @@ public static class TrustResolver
     // (any OTHER merge tool's output in the load order, not just this one).
     static bool HasMasterRelationship(string plugin, string baseName)
     {
-        if (_outputPluginNameForRun is not null && plugin.Equals(_outputPluginNameForRun, StringComparison.OrdinalIgnoreCase))
+        if (_outputPluginNameForRun is not null && (plugin.Equals(_outputPluginNameForRun, StringComparison.OrdinalIgnoreCase)
+                || PluginSplitWriter.IsSplitSiblingOf(plugin, _outputPluginNameForRun)))
             return false;
         if (_mastersByPlugin is null || !_mastersByPlugin.TryGetValue(plugin, out var masters))
             return false;

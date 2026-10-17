@@ -1,6 +1,6 @@
 # Landscape Texture Fixer
 
-**Current version: 1.1.2** — see [CHANGELOG.md](CHANGELOG.md) for what's new.
+**Current version: 1.1.3** — see [CHANGELOG.md](CHANGELOG.md) for what's new.
 
 A standalone tool for Skyrim Special Edition / Anniversary Edition that fixes
 **landscape texture seams** — adjacent terrain quadrants that share no

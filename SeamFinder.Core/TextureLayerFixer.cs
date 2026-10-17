@@ -31,7 +31,7 @@ using Noggog;
 
 namespace SeamFinder.Core;
 
-public record TextureFixResult(int CellsPatched, int LayersAdded, int LayersBoosted, int SkippedQuadrantFull, string OutputPath);
+public record TextureFixResult(int CellsPatched, int LayersAdded, int LayersBoosted, int SkippedQuadrantFull, string OutputPath, IReadOnlyList<string>? AllOutputPaths = null);
 
 public static class TextureLayerFixer
 {
@@ -682,17 +682,12 @@ public static class TextureLayerFixer
         log(eslResult.Summary);
 
         log($"Writing patch plugin to {outputPath} ...");
-        SkyrimMod.WriteBuilder(SkyrimRelease.SkyrimSE)
-            .ToPath(outputPath, fileSystem: null)
-            .WithNoLoadOrder()
-            .WithDataFolder(dataFolderForWrite)
-            .WithAllParentMasters()
-            .Write(patchMod);
+        var writtenPlugins = PluginSplitWriter.Write(patchMod, outputPath, dataFolderForWrite, log);
 
         log($"Patched {cellsPatched} cells ({layersAdded} layers added, {layersBoosted} existing layers boosted, {skippedFull} skipped - quadrant already at the {MaxLayersPerQuadrant}-layer cap" +
             (hardEdgeSkippedOverlap > 0 ? $", {hardEdgeSkippedOverlap} hard-edge taper(s) skipped for overlapping a cross-cell correction" : "") +
             (roadTextureLayersPreserved > 0 ? $", {roadTextureLayersPreserved} of which were Northern Roads texture layer(s) preserved (wholesale absence, not a seam)" : "") + ").");
-        return new TextureFixResult(cellsPatched, layersAdded, layersBoosted, skippedFull, outputPath);
+        return new TextureFixResult(cellsPatched, layersAdded, layersBoosted, skippedFull, outputPath, writtenPlugins);
     }
 
     // ResolveWinningLandscape now lives in HeightmapDecoder.cs, shared with
