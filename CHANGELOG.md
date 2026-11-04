@@ -1,5 +1,9 @@
 # Landscape Texture Fixer — Changelog
 
+## v1.1.4 — 2026-11-03
+
+- **Fixed: starting one of these tools could fail with `MissingFieldException` / "seamfinder core" errors, or the window could close straight away, when more than one of the tools had been extracted into the same folder.** All the tools shipped a file named `SeamFinder.Core.dll`, and the copies are not the same, so the last tool copied over the folder replaced the others' core and they no longer found the code they were built against. Each tool's core now has its own file name (`SeamFinder.Core.<Tool>.dll`), so they can share a folder without overwriting each other. Nothing else changed. **If you updated over an older install, delete the old `SeamFinder.Core.dll` and `SeamFinder.Core.pdb` from the folder; they are no longer used.** Extracting each tool into its own folder is still the cleanest way.
+
 ## v1.1.3 — 2026-10-17
 
 - **New: the window is laid out in two columns** with a thin divider you can drag: setup (mod manager, folders) on the left, options, log and results on the right, and the run buttons in a bar along the bottom that is always on screen. The old single-column window was taller than a 1920x1080 screen at 125-150% scaling, so the log and buttons ended up off the bottom. The window now also opens no taller than the usable screen. New dark theme, long tooltips wrap instead of running off the screen.
