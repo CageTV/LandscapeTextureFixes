@@ -4,6 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Unique per tool: the tools share this namespace but not the code, so two of them extracted into one folder
+         must never overwrite each other's core dll (that gave MissingFieldException / crashes). -->
+    <AssemblyName>SeamFinder.Core.TextureSeamFixer</AssemblyName>
+    <RootNamespace>SeamFinder.Core</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
