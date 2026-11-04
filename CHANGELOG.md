@@ -3,6 +3,7 @@
 ## v1.1.4 — 2026-11-03
 
 - **Fixed: starting one of these tools could fail with `MissingFieldException` / "seamfinder core" errors, or the window could close straight away, when more than one of the tools had been extracted into the same folder.** All the tools shipped a file named `SeamFinder.Core.dll`, and the copies are not the same, so the last tool copied over the folder replaced the others' core and they no longer found the code they were built against. Each tool's core now has its own file name (`SeamFinder.Core.<Tool>.dll`), so they can share a folder without overwriting each other. Nothing else changed. **If you updated over an older install, delete the old `SeamFinder.Core.dll` and `SeamFinder.Core.pdb` from the folder; they are no longer used.** Extracting each tool into its own folder is still the cleanest way.
+- **Fixed: the tools overwrote each other's log and settings files when they were pointed at the same output folder** (for example the game's Data folder when no mod manager is used). Every tool wrote `log.txt` and `settings-used.json`, so the last run replaced the files of the tool that ran before it. This tool now writes `TextureSeamFixer-log.txt` and `TextureSeamFixer-settings-used.json`, so each run keeps its own. The plugin and report file names were already different for every tool and are unchanged. Old `log.txt` / `settings-used.json` files from earlier runs are left alone; delete them if you no longer need them.
 
 ## v1.1.3 — 2026-10-17
 

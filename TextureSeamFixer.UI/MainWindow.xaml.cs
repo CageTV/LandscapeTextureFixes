@@ -339,7 +339,7 @@ public partial class MainWindow : Window
         ParseLines(CustomTrustedPluginsBox.Text), ParseLines(TrustedTexturePrefixesBox.Text));
 
     // Writes the exact settings a run used into that run's own output
-    // folder too (alongside log.txt/esp/csv), separate from the always-on-
+    // folder too (alongside TextureSeamFixer-log.txt/esp/csv), separate from the always-on-
     // launch copy above. Matches SeamFinder.UI's own pattern (added there
     // first; ported here 2026-09-15 for uniformity across all 5 tools in
     // this family, per the user's explicit request).
@@ -348,7 +348,7 @@ public partial class MainWindow : Window
         try
         {
             Directory.CreateDirectory(outputFolder);
-            File.WriteAllText(Path.Combine(outputFolder, "settings-used.json"),
+            File.WriteAllText(Path.Combine(outputFolder, "TextureSeamFixer-settings-used.json"),
                 System.Text.Json.JsonSerializer.Serialize(s, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
         }
         catch
@@ -580,7 +580,7 @@ public partial class MainWindow : Window
         }
     }
 
-    // Points AppendLog's file mirror at <outputFolder>/log.txt and starts it
+    // Points AppendLog's file mirror at <outputFolder>/TextureSeamFixer-log.txt and starts it
     // fresh (matching LogBox.Clear() for the UI copy) - same folder the
     // esp/csv for this run land in. Matches SeamFinder.UI's own pattern.
     void StartLogFile(string outputFolder)
@@ -589,7 +589,7 @@ public partial class MainWindow : Window
         try
         {
             Directory.CreateDirectory(outputFolder);
-            _currentLogFilePath = Path.Combine(outputFolder, "log.txt");
+            _currentLogFilePath = Path.Combine(outputFolder, "TextureSeamFixer-log.txt");
             File.WriteAllText(_currentLogFilePath, "");
         }
         catch
